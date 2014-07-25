@@ -148,13 +148,28 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="Enemy1.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="MyWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MyWindow.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -162,7 +177,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Ubisoft.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\data\fragmentShader.glsl" />
