@@ -15,6 +15,8 @@
 #define WHEIGHT			720
 #define GL_LOG_FILE		"gl.log"
 #define anim_speed		25.0f
+#define collision_delay	0.2f
+#define create_delay	3.0f
 
 enum SPRITE_TYPES
 {
@@ -24,10 +26,9 @@ enum SPRITE_TYPES
 	ENEMY1		= 4,		EXPLOSION1	= 3,
 	ENEMY2		= 5,		EXPLOSION2	= 4,
 	ENEMY3		= 6,
-	ENEMY4		= 7,
-	ROCK1		= 8,
-	ROCK2		= 9,
-	ROCK3		= 10
+	ROCK1		= 7,
+	ROCK2		= 8,
+	ROCK3		= 9
 };
 
 extern GLFWwindow* window;
@@ -35,7 +36,7 @@ extern float winRatio;
 extern glm::mat4 projection_matrix;
 extern glm::mat4 view_matrix;
 
-// PLAYER:
+// PLAYER
 #define p_speed			1.0f
 
 #define p_left_begin	1.0f
@@ -47,14 +48,30 @@ extern glm::mat4 view_matrix;
 #define p_idle_begin	49.0f
 #define p_idle_end		63.0f
 
-// JET_PLAYER:
+// JET_PLAYER
 #define jp_idle_begin	0.0f
 #define jp_idle_end		23.0f
 
-// PROJECTILE:
+// PROJECTILE
 #define pr_speed		1.3f
 #define pr_texRatio		(float)32/512
 #define pr_delay		0.5f
 
 #define pr_idle_begin	0.0f
 #define pr_idle_end		15.0f
+
+// ROCKET
+#define r_speed			1.0f
+#define r_delay			2.0f
+
+// JET_ROCKET
+#define jr_texRatio		(float)32/512
+
+#define jr_idle_begin	0.0f
+#define jr_idle_end		15.0f
+
+// ENEMY1
+#define e1_speed		1.0f
+
+#define e1_idle_begin	0.0f
+#define e1_idle_end		15.0f

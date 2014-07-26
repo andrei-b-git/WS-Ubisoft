@@ -25,8 +25,10 @@ private:
 	static void glfw_key_callback (GLFWwindow* _window, int key, int scancode, int action, int mods);
 	static void glfw_window_size_callback (GLFWwindow* _window, int _width, int _height);
 	void createSprites();
+	void createSprites_regulary();
 	void testKeys();
-	void displayFrame(float deltaTime);
+	void handleCollision();
+	void displayFrame();
 
 public:
 	MyWindow(const char* _name, int _width, int _height);

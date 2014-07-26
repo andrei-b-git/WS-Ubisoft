@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "TextureManager.h"
 
+
 class Projectile {
 
 private:

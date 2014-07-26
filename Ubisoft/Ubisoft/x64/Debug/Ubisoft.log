@@ -1,23 +1,14 @@
-﻿Build started 25.07.2014 23:41:45.
+﻿Build started 26.07.2014 3:48:48.
      1>Project "C:\Users\Cristi\Desktop\Ubisoft\Ubisoft\Ubisoft.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\Users\Cristi\Desktop\Ubisoft\/include/x64 /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Ubisoft.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt MyWindow.cpp Player.cpp Projectile.cpp Shader.cpp Sprite.cpp SpriteManager.cpp Texture.cpp main.cpp utils.cpp
-         Projectile.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\Users\Cristi\Desktop\Ubisoft\/include/x64 /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_DEPRECATE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Debug\Ubisoft.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt MyWindow.cpp
          MyWindow.cpp
-         Generating Code...
-         Compiling...
-         utils.cpp
-         main.cpp
-         Texture.cpp
-         SpriteManager.cpp
-         Sprite.cpp
-         Shader.cpp
-         Player.cpp
-         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Cristi\Desktop\Ubisoft\/lib/x64 glew32.lib glfw3dll.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.lib" /MACHINE:X64 x64\Debug\MyWindow.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\Users\Cristi\Desktop\Ubisoft\/lib/x64 glew32.lib glfw3dll.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Cristi\Desktop\Ubisoft\x64\Debug\Ubisoft.lib" /MACHINE:X64 x64\Debug\Enemy1.obj
+         x64\Debug\MyWindow.obj
          x64\Debug\Player.obj
          x64\Debug\Projectile.obj
+         x64\Debug\Rocket.obj
          x64\Debug\Shader.obj
          x64\Debug\Sprite.obj
          x64\Debug\SpriteManager.obj
@@ -32,4 +23,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.04
+Time Elapsed 00:00:01.53

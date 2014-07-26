@@ -29,6 +29,15 @@ void APIENTRY openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum 
 
 int main() {
 
+	printf("-------------------------------------\n");
+	printf("\tLEFT: TASTA A\n");
+	printf("\tRIGHT: TASTA D\n");
+	printf("\tUP: TASTA W\n");
+	printf("\tDOWN: TASTA S\n");
+	printf("\tSHOOT: TASTA SPACE\n");
+	printf("\tSHOOT ROCKET: TASTA ENTER\n");
+	printf("-------------------------------------\n");
+
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	if (!glfwInit ()) {

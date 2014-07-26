@@ -22,5 +22,8 @@ public:
 	void removeSprite(int index);
 	void removeSpriteType(int type);
 	void update_crash_model(SpriteManager *effect_sprites, float dt);
+	bool detectCollision(Sprite::aabb AABB_1, Sprite::aabb AABB_2);
+	void onColide(Sprite *s, int index);
+	void handleCollisions();
 	void drawSprites(Shader *shader, float dt);
 };

@@ -76,6 +76,19 @@ void MyWindow::createSprites() {
 
 	crash_sprites->addCrashSprite(PLAYER);
 	crash_sprites->addCrashSprite(ENEMY1);
+	crash_sprites->addCrashSprite(ENEMY1);
+	crash_sprites->addCrashSprite(ENEMY1);
+}
+
+void MyWindow::createSprites_regulary() {
+
+	static double previous_seconds = glfwGetTime();
+
+	if(glfwGetTime () - previous_seconds > create_delay) {
+
+		previous_seconds = glfwGetTime();
+		crash_sprites->addCrashSprite(ENEMY1);
+	}
 }
 
 void MyWindow::testKeys() {
@@ -88,9 +101,30 @@ void MyWindow::testKeys() {
 		previous_seconds = glfwGetTime();
 		crash_sprites->addCrashSprite(PROJECTILE);
 	}
+	if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ENTER) &&
+		glfwGetTime () - previous_seconds > r_delay) {
+
+		previous_seconds = glfwGetTime();
+		crash_sprites->addCrashSprite(ROCKET);
+		effect_sprites->addEffectSprite(JET_ROCKET, glm::mat4());
+	}
 }
 
-void MyWindow::displayFrame(float deltaTime) {
+void MyWindow::handleCollision() {
+
+	static double previous_seconds = glfwGetTime();
+
+	if(glfwGetTime () - previous_seconds > collision_delay) {
+
+		previous_seconds = glfwGetTime();
+		crash_sprites->handleCollisions();
+	}
+}
+
+void MyWindow::displayFrame() {
+
+	float deltaTime = (float)(glfwGetTime() - prevTime);
+	prevTime = glfwGetTime();
 
 	crash_sprites->update_crash_model(effect_sprites, deltaTime);
 
@@ -106,12 +140,13 @@ void MyWindow::run() {
 		_update_fps_counter();
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		float deltaTime = (float)(glfwGetTime() - prevTime);
-		prevTime = glfwGetTime();
-
 		testKeys();
 
-		displayFrame(deltaTime);
+		handleCollision();
+
+		displayFrame();
+
+//		createSprites_regulary();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

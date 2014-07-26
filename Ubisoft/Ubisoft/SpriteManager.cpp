@@ -2,11 +2,13 @@
 #include "SpriteManager.h"
 #include "Player.h"
 #include "Projectile.h"
+#include "Rocket.h"
 #include "Enemy1.h"
 
 Sprite *player;
 bool thrust;
 Sprite *thrustSprite;
+Sprite *jet_rocket;
 
 
 SpriteManager::SpriteManager() {
@@ -53,6 +55,17 @@ void SpriteManager::addEffectSprite(int type, glm::mat4 model_matrix) {
 			sprites->push_back(thrustSprite);
 			break;
 		}
+		case JET_ROCKET: {
+			Sprite::aabb AABB = player->get_AABB(player->model_matrix, false);
+			glm::vec3 center = glm::vec3((AABB.max.x + AABB.min.x)/2, AABB.max.y - winRatio/20, 0.0f);
+			jet_rocket = new Sprite(JET_ROCKET, center, glm::vec2(winRatio/30, winRatio/30));
+			assert(jet_rocket);
+			jet_rocket->set_texture(textures->addTexture("../resurse/FX/projectile_bolt_blue.png", 1.0f));
+			jet_rocket->texture->texRatio = jr_texRatio;
+			jet_rocket->set_frames(jr_idle_begin, jr_idle_end);
+			sprites->push_back(jet_rocket);
+			break;
+		}
 	}
 }
 
@@ -73,6 +86,14 @@ void SpriteManager::addCrashSprite(int type) {
 			Projectile *pr = new Projectile(center, textures);
 			assert(pr);
 			sprites->push_back(pr->sprite);
+			break;
+		}
+		case ROCKET: {
+			Sprite::aabb AABB = player->get_AABB(player->model_matrix, false);
+			glm::vec3 center = glm::vec3((AABB.max.x + AABB.min.x)/2, AABB.max.y, 0.0f);
+			Rocket *r = new Rocket(center, textures);
+			assert(r);
+			sprites->push_back(r->sprite);
 			break;
 		}
 		case ENEMY1: {
@@ -123,6 +144,70 @@ void SpriteManager::update_crash_model(SpriteManager *effect_sprites, float dt) 
 				if(exists == false)
 					removeSprite(i);
 				break;
+			}
+			case ROCKET: {
+				bool exists = Rocket::Get()->calc_model_Rocket(sprites->at(i), dt);
+				jet_rocket->model_matrix = sprites->at(i)->model_matrix;
+				if(exists == false) {
+					removeSprite(i);
+					effect_sprites->removeSpriteType(JET_ROCKET);
+				}
+				break;
+			}
+			case ENEMY1: {
+				Enemy1::Get()->calc_model_Enemy1(sprites->at(i), dt);
+				break;
+			}
+		}
+	}
+}
+
+bool SpriteManager::detectCollision(Sprite::aabb AABB_1, Sprite::aabb AABB_2) {
+
+	if(AABB_1.max.x < AABB_2.min.x || AABB_1.min.x > AABB_2.max.x) 
+		return false;
+	if(AABB_1.max.y < AABB_2.min.y || AABB_1.min.y > AABB_2.max.y)
+		return false;
+
+	return true;
+}
+
+void SpriteManager::onColide(Sprite *s, int index) {
+
+	switch(s->type) {
+
+		case PLAYER: {
+			removeSprite(index);
+			break;
+		}
+		case PROJECTILE: {
+			removeSprite(index);
+			break;
+		}	
+		case ENEMY1: {
+			removeSprite(index);
+			break;
+		}
+	}
+}
+
+void SpriteManager::handleCollisions() {
+
+	for(int i=0; i<sprites->size(); i++) {
+
+		if(sprites->at(i)->type == PLAYER || sprites->at(i)->type == PROJECTILE) {
+		
+			for(int j=0; j<sprites->size(); j++) {
+
+				if(sprites->at(j)->type != PLAYER && sprites->at(j)->type != PROJECTILE && sprites->at(j)->type != ROCKET) {
+
+					if(detectCollision(sprites->at(i)->get_AABB(sprites->at(i)->model_matrix, true), 
+										sprites->at(j)->get_AABB(sprites->at(j)->model_matrix, true)) == true) {
+
+						onColide(sprites->at(i), i);
+						onColide(sprites->at(j), j);
+					}
+				}
 			}
 		}
 	}
