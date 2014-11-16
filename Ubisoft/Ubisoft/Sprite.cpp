@@ -2,17 +2,30 @@
 #include "Sprite.h"
 
 
-Sprite::Sprite(int _type, glm::vec3 center, glm::vec2 dif) {
+Sprite::Sprite(int _type, glm::vec3 _center, glm::vec2 _dif) {
 
 	type = _type;
+	center = _center;
+	dif = _dif;
+
+	original_model_matrix = glm::mat4();
 	model_matrix = glm::mat4();
 	pos = glm::vec3();
+	offset = 0.0f;
+
+	ref = NULL;
+	ref_type = -1;
+	previousTime = 0.0f;
 
 	currentAnimation.speed = anim_speed;
 	currentAnimation.current_time = 0.0f;
 
 	AABB.min = glm::vec2(center.x - dif.x, center.y - dif.y);
 	AABB.max = glm::vec2(center.x + dif.x, center.y + dif.y);
+	hasColided = false;
+	crasher = NULL;
+
+	own.red = 0.0f;
 
 	GLfloat vertex_buffer[] = {	center.x + dif.x, center.y + dif.y, 0.0f, 1.0f, 1.0f,
 								center.x + dif.x, center.y - dif.y, 0.0f, 1.0f, 0.0f,
@@ -70,15 +83,15 @@ void Sprite::set_frames(float begin, float end) {
 Sprite::aabb Sprite::get_AABB(glm::mat4 model_matrix, bool real) {
 
 	struct aabb new_AABB;
-	glm::mat4 PV = glm::mat4();
+	glm::mat4 P = glm::mat4();
 
 	if(real == true)
-		PV = projection_matrix * view_matrix;
+		P = projection_matrix;
 
-	glm::vec4 new_min = PV * model_matrix * 
+	glm::vec4 new_min = P * model_matrix * 
 						glm::vec4 (AABB.min, 0.0f, 1.0f);
 
-	glm::vec4 new_max = PV * model_matrix * 
+	glm::vec4 new_max = P * model_matrix * 
 						glm::vec4 (AABB.max, 0.0f, 1.0f);
 
 	new_AABB.min.x = new_min.x;
@@ -89,10 +102,18 @@ Sprite::aabb Sprite::get_AABB(glm::mat4 model_matrix, bool real) {
 	return new_AABB;
 }
 
-bool Sprite::isInside(glm::mat4 model_matrix) {
+bool Sprite::isInside(glm::mat4 model_matrix, float limit, bool isPlayer) {
 
 	struct aabb new_AABB = get_AABB(model_matrix, true);
 
-	return !(new_AABB.min.x < -1.0f || new_AABB.min.y < -1.0f ||
-			new_AABB.max.x > 1.0f || new_AABB.max.y > 1.0f);
+	if(isPlayer == true)
+		return !(new_AABB.min.x < -limit || 
+				new_AABB.min.y < -1.0f ||
+				new_AABB.max.x > limit || 
+				new_AABB.max.y > 1.0f);
+	else
+		return !(new_AABB.min.x < -limit || 
+				new_AABB.min.y < -limit ||
+				new_AABB.max.x > limit || 
+				new_AABB.max.y > limit);
 }

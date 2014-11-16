@@ -17,13 +17,13 @@ TextureManager::~TextureManager() {
 	delete textures;
 }
 
-Texture* TextureManager::addTexture(const char *texture_name, float isAnimated) {
+Texture* TextureManager::addTexture(const char *texture_name, float isAnimated, bool flip) {
 
 	std::map<std::string, Texture*>::iterator fnd = textures->find(texture_name);
 	Texture* needed_img = NULL;
 	if(fnd == textures->end()) {
 
-		needed_img = new Texture(texture_name, isAnimated);
+		needed_img = new Texture(texture_name, isAnimated, flip);
 		assert(needed_img);
 			
 		std::pair<std::string, Texture*> ins_t(texture_name, needed_img);

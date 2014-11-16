@@ -18,6 +18,7 @@ public:
 	unsigned int location_isAnimated;
 	unsigned int location_frame;
 	unsigned int location_texRatio;
+	unsigned int location_red;
 
 	Shader(const char* vs_name, const char* fs_name);
 	~Shader();

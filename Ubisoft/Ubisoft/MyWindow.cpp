@@ -5,9 +5,18 @@ float winRatio;
 GLFWwindow* window;
 glm::mat4 projection_matrix;
 glm::mat4 view_matrix;
+int score;
+int nr_rockets;
+int nr_e1_killed;
+int nr_e2_killed;
+bool GAME_OVER;
 
 int MyWindow::width;
 int MyWindow::height;
+
+double t = 0.0f;
+double dt = dt_physics;
+double accumulator = 0.0f;
 
 
 MyWindow::MyWindow(const char* _name, int _width, int _height) {
@@ -42,27 +51,37 @@ MyWindow::MyWindow(const char* _name, int _width, int _height) {
 	view_matrix = glm::mat4();
 	glViewport(0, 0, width, height);
 
+	currentTime = glfwGetTime();
+	score = 0;
+	nr_rockets = 3;
+	nr_e1_killed = 0;
+	nr_e2_killed = 0;
+	GAME_OVER = false;
+
 	shader = new Shader("../data/vertexShader.glsl", "../data/fragmentShader.glsl");
 	assert(shader);
 
 	background = new SpriteManager();
 	assert(background);
 
-	effect_sprites = new SpriteManager();
-	assert(effect_sprites);
-	effect_sprites->reserveSprites(100);
-
 	crash_sprites = new SpriteManager();
 	assert(crash_sprites);
 	crash_sprites->reserveSprites(500);
 
-	createSprites();
+	effect_sprites = new SpriteManager();
+	assert(effect_sprites);
+	effect_sprites->reserveSprites(500);
 
-	prevTime = glfwGetTime();
+	UI_sprites = new SpriteManager();
+	assert(UI_sprites);
+	UI_sprites->reserveSprites(50);
+
+	createDefaultSprites();
 }
 	
 MyWindow::~MyWindow() {
 	
+	delete UI_sprites;
 	delete effect_sprites;
 	delete crash_sprites;
 	delete background;
@@ -70,67 +89,125 @@ MyWindow::~MyWindow() {
 	glfwDestroyWindow(window);
 }
 
-void MyWindow::createSprites() {
+void MyWindow::createDefaultSprites() {
 
-	background->addEffectSprite(BACKGROUND, glm::mat4());
+	background->addEffectSprite(BACKGROUND, NULL, -1.0f);
 
-	crash_sprites->addCrashSprite(PLAYER);
-	crash_sprites->addCrashSprite(ENEMY1);
-	crash_sprites->addCrashSprite(ENEMY1);
-	crash_sprites->addCrashSprite(ENEMY1);
+	crash_sprites->addCrashSprite(PLAYER, NULL, effect_sprites);
+
+	effect_sprites->textures->addTexture("../resurse/Explosions/Exp_type_A.png", 1.0f, false);
+	effect_sprites->textures->addTexture("../resurse/Explosions/Turret_blast_strip.png", 1.0f, false);
+	effect_sprites->textures->addTexture("../resurse/Explosions/Exp_type_C.png", 1.0f, false);
+	effect_sprites->textures->addTexture("../resurse/Explosions/Fort_exp_strip.png", 1.0f, false);
+	effect_sprites->textures->addTexture("../resurse/Explosions/Vehicle_exp_strip.png", 1.0f, false);
+
+	UI_sprites->addUiSprite(READY, 0.0f);
+	UI_sprites->addUiSprite(SCORE, 0.0f);
+	UI_sprites->addUiSprite(NUMBER_0, 0.0f);
+	UI_sprites->addUiSprite(RED_BAR, 0.0f);
+	UI_sprites->addUiSprite(GREEN_BAR, 0.0f);
+	UI_sprites->addUiSprite(RKT_ICON, 0.0f);
+	UI_sprites->addUiSprite(RKT_ICON, winRatio/30);
+	UI_sprites->addUiSprite(RKT_ICON, 2*winRatio/30);
 }
 
-void MyWindow::createSprites_regulary() {
+void MyWindow::createWave(double time) {
 
-	static double previous_seconds = glfwGetTime();
+	static double previousTime = -wave_delay*20/21;
+	static int enemy = 1;
 
-	if(glfwGetTime () - previous_seconds > create_delay) {
+	if(time - previousTime > wave_delay) {
 
-		previous_seconds = glfwGetTime();
-		crash_sprites->addCrashSprite(ENEMY1);
+		previousTime = time;
+
+		if(UI_sprites->sprites->at(0)->type == READY)
+			UI_sprites->removeSprite(0);
+
+		if(enemy == 1) {
+			for(int i=0; i<e1_nr_wave; i++)
+				crash_sprites->addCrashSprite(ENEMY1, NULL, effect_sprites);
+			enemy = 2;
+		} else {
+			for(int i=0; i<e2_nr_wave; i++)
+				crash_sprites->addCrashSprite(ENEMY2, NULL, effect_sprites);
+			enemy = 1;
+		}
+	}
+	if(nr_e1_killed == e1_nr_wave || nr_e2_killed == e2_nr_wave) {
+		crash_sprites->addCrashSprite(BONUS, NULL, effect_sprites);
+		nr_e1_killed = 0;
+		nr_e2_killed = 0;
+		previousTime = -wave_delay;
+	}
+	if(crash_sprites->player != NULL && GAME_OVER == true) {
+		UI_sprites->addUiSprite(OVER, 0.0f);
+		crash_sprites->player = NULL;
 	}
 }
 
-void MyWindow::testKeys() {
+void MyWindow::testKeys(double time) {
 
-	static double previous_seconds = glfwGetTime();
+	static double previousTime = 0.0f;
 
 	if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_SPACE) &&
-		glfwGetTime () - previous_seconds > pr_delay) {
+		time - previousTime > fire_rate) {
 
-		previous_seconds = glfwGetTime();
-		crash_sprites->addCrashSprite(PROJECTILE);
+		previousTime = time;
+		crash_sprites->addCrashSprite(PROJECTILE, crash_sprites->player, effect_sprites);
 	}
 	if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ENTER) &&
-		glfwGetTime () - previous_seconds > r_delay) {
+		time - previousTime > r_delay && nr_rockets > 0) {
 
-		previous_seconds = glfwGetTime();
-		crash_sprites->addCrashSprite(ROCKET);
-		effect_sprites->addEffectSprite(JET_ROCKET, glm::mat4());
+		previousTime = time;
+		crash_sprites->addCrashSprite(ROCKET, crash_sprites->player, effect_sprites);
+		nr_rockets --;
 	}
 }
 
-void MyWindow::handleCollision() {
+void MyWindow::handleCollision(double time) {
 
-	static double previous_seconds = glfwGetTime();
+	static double previousTime = 0.0f;
 
-	if(glfwGetTime () - previous_seconds > collision_delay) {
+	if(time - previousTime > collision_delay) {
 
-		previous_seconds = glfwGetTime();
-		crash_sprites->handleCollisions();
+		previousTime = time;
+		crash_sprites->handleCollisions(effect_sprites, UI_sprites);
 	}
 }
 
-void MyWindow::displayFrame() {
+void MyWindow::update_score() {
 
-	float deltaTime = (float)(glfwGetTime() - prevTime);
-	prevTime = glfwGetTime();
+	static int previous_score = 0;
 
-	crash_sprites->update_crash_model(effect_sprites, deltaTime);
+	if(score != previous_score) {
 
-	background->drawSprites(shader, deltaTime);
-	crash_sprites->drawSprites(shader, deltaTime);
-	effect_sprites->drawSprites(shader, deltaTime);
+		UI_sprites->clearScore();
+
+		int copy_score = score;
+		int i = 0;
+
+		while(copy_score){
+			UI_sprites->addUiSprite(20 + copy_score % 10, i*winRatio/35);
+			copy_score /= 10;
+			i++;
+		}
+		previous_score = score;
+	}
+}
+
+void MyWindow::update_rockets() {
+
+	static int previous_nr_rockets = 3;
+
+	if(nr_rockets != previous_nr_rockets) {
+
+		UI_sprites->clearRockets();
+
+		for(int i=0; i<nr_rockets; i++)
+			UI_sprites->addUiSprite(RKT_ICON, i*winRatio/30);
+
+		previous_nr_rockets = nr_rockets;
+	}
 }
 
 void MyWindow::run() {
@@ -140,13 +217,39 @@ void MyWindow::run() {
 		_update_fps_counter();
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		testKeys();
+		double newTime = glfwGetTime();
+		double frameTime = newTime - currentTime;
+		if ( frameTime > 0.25 )
+			frameTime = 0.25;
+		currentTime = newTime;
 
-		handleCollision();
+		accumulator += frameTime;
 
-		displayFrame();
+		while ( accumulator >= dt ) {
 
-//		createSprites_regulary();
+			// update fizica (deplasare, anim, coliziune)
+			createWave(t);
+			if(GAME_OVER == false) {
+				testKeys(t);
+				handleCollision(t);
+			}
+			background->update_background(dt);
+			crash_sprites->update_crash_model(effect_sprites, t, dt);
+
+			crash_sprites->update_animation(dt);
+			effect_sprites->update_animation(dt);
+
+			t += dt;
+			accumulator -= dt;
+		}
+		// render si update scor
+		update_score();
+		update_rockets();
+
+		background->drawSprites(shader, false);
+		crash_sprites->drawSprites(shader, false);
+		effect_sprites->drawSprites(shader, false);
+		UI_sprites->drawSprites(shader, true);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

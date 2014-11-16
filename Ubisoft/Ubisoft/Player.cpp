@@ -12,9 +12,13 @@ Player::Player() {
 
 Player::Player(TextureManager *textures) {
 
-	sprite = new Sprite(PLAYER, glm::vec3(0.0f, -winRatio/3, 0.0f), glm::vec2(winRatio/10, winRatio/10));
-	sprite->set_texture(textures->addTexture("../resurse/Player/strip_player.png", 1.0f));
+	sprite = new Sprite(PLAYER, glm::vec3(p_coords_x, p_coords_y, 0.0f), glm::vec2(winRatio/10, winRatio/10));
+	sprite->set_texture(textures->addTexture("../resurse/Player/strip_player.png", 1.0f, false));
 	set_anim(sprite, IDLE);
+	sprite->own.hp = p_hp;
+	sprite->own.dmg = p_dmg;
+	sprite->own.hit_score = 0;
+	sprite->own.kill_score = 0;
 	speed = p_speed;
 }
 
@@ -63,12 +67,19 @@ void Player::set_anim(Sprite* sprite, int type) {
 	}
 }
 
-bool Player::calc_model_Player(Sprite* sprite, float dt) {
+bool Player::calc_model_Player(Sprite* sprite, double dt) {
 
 	bool modified = false;
-	glm::vec3 pos = sprite->pos;
 	glm::vec3 dir = glm::vec3();
+	glm::vec3 pos = sprite->pos;
+	glm::mat4 model_matrix;
 
+	pos.y -= (float)(b_speed*dt);
+	model_matrix = glm::translate(pos);
+	if(sprite->isInside(model_matrix, outer_lim, true)) {
+		sprite->pos = pos;
+		sprite->model_matrix = model_matrix;
+	}
 	if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_A)) {
 		dir.x = -1.0f;
 		if(verify_anim(sprite, LEFT) == false && modified == false)
@@ -95,11 +106,22 @@ bool Player::calc_model_Player(Sprite* sprite, float dt) {
 	}
 	if(modified == true) {
 		dir = glm::normalize(dir);
-		pos += dir*speed*dt;
-		glm::mat4 model_matrix = glm::translate(glm::mat4(), pos);
-		if(sprite->isInside(model_matrix)) {
+		pos += dir*(float)(speed*dt);
+		model_matrix = glm::translate(pos);
+		if(sprite->isInside(model_matrix, outer_lim, true)) {
 			sprite->pos = pos;
 			sprite->model_matrix = model_matrix;
+		} else {
+			model_matrix = glm::translate(glm::vec3(pos.x, sprite->pos.y, 0.0f));
+			if(sprite->isInside(model_matrix, outer_lim, true)) {
+				sprite->pos = glm::vec3(pos.x, sprite->pos.y, 0.0f);
+				sprite->model_matrix = model_matrix;
+			}
+			model_matrix = glm::translate(glm::vec3(sprite->pos.x, pos.y, 0.0f));
+			if(sprite->isInside(model_matrix, outer_lim, true)) {
+				sprite->pos = glm::vec3(sprite->pos.x, pos.y, 0.0f);
+				sprite->model_matrix = model_matrix;
+			}
 		}
 		if(verify_anim(sprite, IDLE) == false)
 			return true;

@@ -40,6 +40,8 @@ int main() {
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	srand((unsigned int)time(NULL));
+
 	if (!glfwInit ()) {
 		fprintf (stderr, "ERROR: could not start GLFW3\n");
 		return 1;
@@ -48,11 +50,11 @@ int main() {
 
 	MyWindow *win = new MyWindow("Space Invaders", WWIDTH, WHEIGHT);
 	assert(win);
-
+	/*
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(openglDebugCallback, NULL);
 	glEnable(GL_DEBUG_OUTPUT);
-
+	*/
 	win->run();
 
 	delete win;

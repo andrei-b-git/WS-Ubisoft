@@ -3,10 +3,13 @@
 in vec2 texture_coord;
 
 uniform sampler2D basic_texture;
+uniform float red;
 
 out vec4 out_color;
 
 void main () {
 
-	out_color = texture(basic_texture, texture_coord);
+	vec4 tex = texture(basic_texture, texture_coord);
+
+	out_color = vec4(tex.x + red, tex.yzw);
 }

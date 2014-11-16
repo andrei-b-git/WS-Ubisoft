@@ -12,6 +12,6 @@ public:
 	float texRatio;
 	float isAnimated;
 
-	Texture(const char *texture_name, float _isAnimated);
+	Texture(const char *texture_name, float _isAnimated, bool flip);
 	~Texture();
 };

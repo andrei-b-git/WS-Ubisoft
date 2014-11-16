@@ -8,14 +8,13 @@ class Projectile {
 
 private:
 	static Projectile me; 
-	float speed;
 
 public:
 	Sprite *sprite;
 
 	Projectile();
-	Projectile(glm::vec3 center, TextureManager *textures);
+	Projectile(Sprite *ref, TextureManager *textures);
 	~Projectile();
 	static Projectile* Get();
-	bool calc_model_Projectile(Sprite* &sprite, float dt);
+	bool calc_model_Projectile(Sprite* &sprite, double dt);
 };

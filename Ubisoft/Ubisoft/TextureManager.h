@@ -15,5 +15,5 @@ private:
 public:
 	TextureManager();
 	~TextureManager();
-	Texture* addTexture(const char *texture_name, float isAnimated);
+	Texture* addTexture(const char *texture_name, float isAnimated, bool flip);
 };

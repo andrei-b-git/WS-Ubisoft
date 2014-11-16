@@ -2,7 +2,7 @@
 
 #include "Sprite.h"
 #include "TextureManager.h"
-#include <time.h> 
+#include <time.h>
 
 
 class Enemy1 {
@@ -18,5 +18,5 @@ public:
 	Enemy1(TextureManager *textures);
 	~Enemy1();
 	static Enemy1* Get();
-	void calc_model_Enemy1(Sprite* &sprite, float dt);
+	bool calc_model_Enemy1(Sprite* &sprite, double dt);
 };

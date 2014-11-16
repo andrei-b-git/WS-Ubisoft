@@ -1,9 +1,10 @@
 #pragma once
 
-#include <time.h>
+#include <ctime>
 #include <stdarg.h>
 
 
+float Random(float l, float h);
 bool RestartLog();
 bool GameLog(const char* message, ...);
 bool ErrorLog(const char* message, ...);

@@ -5,7 +5,7 @@
 #include "utils.h"
 
 
-Texture::Texture(const char *texture_name, float _isAnimated) {
+Texture::Texture(const char *texture_name, float _isAnimated, bool flip) {
 
 	int x, y, n;
 	int force_channels = 4;
@@ -16,7 +16,8 @@ Texture::Texture(const char *texture_name, float _isAnimated) {
 	width = x;
 	height = y;
 
-	FlipTexture(image_data, x, y, n);
+	if(flip == false)
+		FlipTexture(image_data, x, y, n);
 
 	id = 0;
 	glGenTextures(1, &id);

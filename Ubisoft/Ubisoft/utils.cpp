@@ -3,6 +3,15 @@
 #include "utils.h"
 
 
+float Random(float l, float h) {
+
+	float a = (float)rand();
+	a /= RAND_MAX;
+
+	a = (h - l) * a + l;
+	return a;
+}
+
 bool RestartLog()
 {
 	FILE* file = fopen(GL_LOG_FILE, "w");

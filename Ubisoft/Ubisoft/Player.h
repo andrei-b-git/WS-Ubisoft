@@ -16,7 +16,7 @@ class Player {
 
 private:
 	static Player me; 
-	float speed;
+	double speed;
 
 public:
 	Sprite *sprite;
@@ -27,5 +27,5 @@ public:
 	static Player* Get();
 	bool verify_anim(Sprite* sprite, int type);
 	void set_anim(Sprite* sprite, int type);
-	bool calc_model_Player(Sprite* sprite, float dt);
+	bool calc_model_Player(Sprite* sprite, double dt);
 };

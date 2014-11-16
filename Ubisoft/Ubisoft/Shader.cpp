@@ -27,6 +27,7 @@ Shader::Shader(const char* vs_name, const char* fs_name) {
 	location_isAnimated = glGetUniformLocation(program, "isAnimated");
 	location_frame = glGetUniformLocation(program, "frame");
 	location_texRatio = glGetUniformLocation(program, "texRatio");
+	location_red = glGetUniformLocation(program, "red");
 
 	delete[] vertex_shader;
 	delete[] fragment_shader;

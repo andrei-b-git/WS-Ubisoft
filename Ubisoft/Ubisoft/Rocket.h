@@ -8,7 +8,7 @@ class Rocket {
 
 private:
 	static Rocket me; 
-	float speed;
+	double speed;
 
 public:
 	Sprite *sprite;
@@ -17,5 +17,5 @@ public:
 	Rocket(glm::vec3 center, TextureManager *textures);
 	~Rocket();
 	static Rocket* Get();
-	bool calc_model_Rocket(Sprite* &sprite, float dt);
+	bool calc_model_Rocket(Sprite* &sprite, double dt);
 };
